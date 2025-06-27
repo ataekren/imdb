@@ -1,0 +1,96 @@
+<header class="app-header">
+  <div class="header-container">
+    <!-- Logo -->
+    <div class="logo" (click)="router.navigate(['/'])">
+      <h1>IMDb</h1>
+    </div>
+
+    <!-- Search Section -->
+    <div class="search-section">
+      <div class="search-container">
+        <select 
+          class="search-type-select" 
+          [formControl]="searchTypeControl">
+          <option value="all">{{ translations.searchAll }}</option>
+          <option value="movies">{{ translations.searchMovies }}</option>
+          <option value="actors">{{ translations.searchActors }}</option>
+        </select>
+        
+                 <input 
+           type="text" 
+           class="search-input"
+           [placeholder]="translations.searchPlaceholder"
+           [formControl]="searchControl"
+           (keyup.enter)="onSearch()"
+           (focus)="showSearchResults = true"
+           (blur)="onSearchBlur()">
+        
+        <button 
+          class="search-button" 
+          (click)="onSearch()"
+          [disabled]="isSearching">
+          <span class="search-icon">🔍</span>
+        </button>
+
+        <!-- Quick Search Results -->
+        <div class="search-results" *ngIf="showSearchResults && (searchResults$ | async) as results">
+          <div class="search-loading" *ngIf="isSearching">
+            {{ translations.loading }}
+          </div>
+          <div class="search-result-item" 
+               *ngFor="let movie of results" 
+               (click)="onMovieSelect(movie)">
+            <img [src]="movie.imageUrl || 'assets/movie-placeholder.jpg'" 
+                 [alt]="getMovieTitle(movie)"
+                 class="result-image">
+            <div class="result-info">
+              <div class="result-title">{{ getMovieTitle(movie) }}</div>
+              <div class="result-meta">
+                {{ movie.releaseYear }} • ⭐ {{ movie.imdbScore }}/10
+              </div>
+            </div>
+          </div>
+          <div class="no-results" *ngIf="!isSearching && results.length === 0 && searchControl.value && searchControl.value.length >= 3">
+            {{ translations.noResults }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Section -->
+    <div class="user-section">
+      <!-- Language Switcher -->
+      <div class="language-switcher">
+        <button 
+          class="lang-button"
+          [class.active]="currentLanguage === 'en'"
+          (click)="onLanguageChange('en')">
+          EN
+        </button>
+        <button 
+          class="lang-button"
+          [class.active]="currentLanguage === 'tr'"
+          (click)="onLanguageChange('tr')">
+          TR
+        </button>
+      </div>
+
+      <!-- Auth Section -->
+      <div class="auth-section" *ngIf="!isLoggedIn">
+        <button class="login-button" (click)="onLogin()">
+          {{ translations.login }}
+        </button>
+      </div>
+
+      <div class="user-menu" *ngIf="isLoggedIn">
+        <div class="user-info">
+          <span class="welcome-text">{{ translations.welcome }}, </span>
+          <span class="user-name">{{ currentUser?.firstName }}</span>
+        </div>
+        <button class="logout-button" (click)="onLogout()">
+          {{ translations.logout }}
+        </button>
+      </div>
+    </div>
+  </div>
+</header> 

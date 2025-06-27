@@ -1,0 +1,107 @@
+<div class="movie-slider" *ngIf="movies.length > 0">
+  <!-- Section Title -->
+  <div class="slider-header">
+    <h2 class="section-title">{{ title }}</h2>
+    
+    <!-- Navigation Buttons -->
+    <div class="slider-nav">
+      <button 
+        class="nav-button prev-button"
+        (click)="previousSlide()"
+        [disabled]="currentSlide === 0">
+        ◀
+      </button>
+      <button 
+        class="nav-button next-button"
+        (click)="nextSlide()"
+        [disabled]="currentSlide >= maxSlide">
+        ▶
+      </button>
+    </div>
+  </div>
+
+  <!-- Movie Slider Container -->
+  <div class="slider-container">
+    <div class="slider-track" [style.transform]="getSliderTransform()">
+      <div 
+        class="movie-card" 
+        *ngFor="let movie of movies"
+        (click)="onMovieClick(movie)">
+        
+        <!-- Movie Poster -->
+        <div class="movie-poster">
+          <img 
+            [src]="movie.imageUrl || 'assets/movie-placeholder.jpg'" 
+            [alt]="getMovieTitle(movie)"
+            class="poster-image">
+          
+          <!-- Overlay with Actions -->
+          <div class="movie-overlay">
+            <div class="movie-actions">
+              <button 
+                class="action-button watchlist-button"
+                [class.in-watchlist]="movie.isInWatchlist"
+                (click)="onWatchlistToggle($event, movie)"
+                [title]="movie.isInWatchlist ? translations.removeFromWatchlist : translations.addToWatchlist">
+                {{ movie.isInWatchlist ? '❤️' : '🤍' }}
+              </button>
+              
+              <button 
+                class="action-button trailer-button"
+                *ngIf="movie.trailerUrl"
+                (click)="onTrailerClick($event, movie)"
+                [title]="translations.watchTrailer">
+                ▶️
+              </button>
+            </div>
+            
+            <!-- Quick Info -->
+            <div class="quick-info">
+              <div class="rating-badge">
+                ⭐ {{ movie.imdbScore }}/10
+              </div>
+              <div class="ranking-badge" *ngIf="movie.popularityRank">
+                #{{ movie.popularityRank }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Movie Info -->
+        <div class="movie-info">
+          <h3 class="movie-title">{{ getMovieTitle(movie) }}</h3>
+          <div class="movie-meta">
+            <span class="year">{{ movie.releaseYear }}</span>
+            <span class="genre">{{ movie.genre }}</span>
+          </div>
+          <div class="movie-stats">
+                       <span class="rating">
+               ⭐ {{ movie.averageRating ? movie.averageRating.toFixed(1) : movie.imdbScore }}/10
+             </span>
+            <span class="votes" *ngIf="movie.totalRatings">
+              ({{ movie.totalRatings }})
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slider Indicators -->
+  <div class="slider-indicators" *ngIf="maxSlide > 0">
+    <button 
+      class="indicator"
+      *ngFor="let slide of [].constructor(maxSlide + 1); let i = index"
+      [class.active]="i === currentSlide"
+      (click)="currentSlide = i">
+    </button>
+  </div>
+</div>
+
+<!-- Empty State -->
+<div class="empty-state" *ngIf="movies.length === 0">
+  <div class="empty-message">
+    <h3>{{ translations.noResults }}</h3>
+    <p>{{ translations.loading }}</p>
+  </div>
+</div> 

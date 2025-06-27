@@ -1,0 +1,195 @@
+# .NET Core / ASP.NET Core
+backend/**/bin/
+backend/**/obj/
+backend/**/*.user
+backend/**/*.suo
+backend/**/*.cache
+backend/**/*.dll
+backend/**/*.exe
+backend/**/*.pdb
+backend/**/*.log
+backend/**/*.vspscc
+backend/**/*.vssscc
+backend/**/.builds
+backend/**/*.pidb
+backend/**/*.svclog
+backend/**/*.scc
+backend/**/*.swp
+backend/**/*.ncrunch*
+backend/**/.*crunch*.local.xml
+backend/**/nCrunchTemp_*
+backend/**/_ReSharper*/
+backend/**/*.[Rr]e[Ss]harper
+backend/**/*.DotSettings.user
+backend/**/*.ncrunchsolution
+backend/**/*.ncrunchproject
+backend/**/project.lock.json
+backend/**/project.fragment.lock.json
+backend/**/artifacts/
+backend/**/PublishProfiles/
+backend/**/*.pubxml
+backend/**/*.publishproj
+backend/**/*.orig
+
+# ASP.NET Scaffolding
+backend/**/ScaffoldingReadMe.txt
+
+# .NET Core
+backend/**/.dotnet/
+backend/**/.tools/
+
+# MSTest test Results
+backend/**/[Tt]est[Rr]esult*/
+backend/**/[Bb]uild[Ll]og.*
+
+# NUnit
+backend/**/*.VisualState.xml
+backend/**/TestResult.xml
+backend/**/nunit-*.xml
+
+# Build Results of an ATL Project
+backend/**/[Dd]ebugPS/
+backend/**/[Rr]eleasePS/
+backend/**/dlldata.c
+
+# Benchmark Results
+backend/**/BenchmarkDotNet.Artifacts/
+
+# ========================================
+# Angular / Node.js / Frontend
+# ========================================
+
+# Dependencies
+frontend/**/node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Package locks (optional - some teams commit these)
+# frontend/**/package-lock.json
+# frontend/**/yarn.lock
+
+# Angular build outputs
+frontend/**/dist/
+frontend/**/tmp/
+frontend/**/out-tsc/
+frontend/**/bazel-out/
+
+# Angular cache
+frontend/**/.angular/
+
+# Angular profiling files
+frontend/**/chrome-profiler-events*.json
+
+# IDEs and editors
+.vscode/
+.vs/
+.idea/
+*.swp
+*.swo
+*~
+
+# Miscellaneous
+frontend/**/.sass-cache/
+frontend/**/connect.lock
+frontend/**/coverage/
+frontend/**/libpeerconnection.log
+frontend/**/testem.log
+frontend/**/typings/
+
+# System files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+frontend/**/.env*
+
+# TypeScript
+*.tsbuildinfo
+
+# ESLint
+.eslintcache
+
+# Stylelint
+.stylelintcache
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Webpack
+frontend/**/webpack-stats.json
+
+# Angular i18n
+frontend/**/src/locale/
+
+# Storybook
+frontend/**/.storybook-out
+frontend/**/storybook-static
+
+# Firebase
+.firebase/
+firebase-debug.log*
+firebase-debug.*.log*
+
+# ========================================
+# Logs and temporary files
+# ========================================
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output/
+
+# ========================================
+# Build outputs (General)
+# ========================================
+build/
+dist/
+out/
+.next/
+.nuxt/
+.cache/
+.parcel-cache/
+.vercel/
+.netlify/
+
+# ========================================
+# Sensitive files (add your specific files here)
+# ========================================
+# Firebase service account keys
+**/firebase-adminsdk*.json
+**/firebase-service-account*.json
+
+# Database connection strings (if stored in files)
+# **/*connection*.json
+
+# API keys and secrets
+# **/*secrets*.json
+# **/*keys*.json 
