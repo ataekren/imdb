@@ -25,6 +25,10 @@ export interface RegisterRequest {
 
 export interface GoogleAuthRequest {
   idToken: string;
+  firstName: string;
+  lastName: string;
+  country: string;
+  city: string;
 }
 
 export interface AuthResponse {

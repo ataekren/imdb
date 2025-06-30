@@ -123,14 +123,14 @@ namespace IMDB.Controllers
 
                 if (user == null)
                 {
-                    // Create new user from Google account
+                    // Create new user from Google account using provided data
                     user = new User
                     {
                         Email = firebaseToken.Claims["email"].ToString()!,
-                        FirstName = firebaseToken.Claims.ContainsKey("given_name") ? firebaseToken.Claims["given_name"].ToString()! : "",
-                        LastName = firebaseToken.Claims.ContainsKey("family_name") ? firebaseToken.Claims["family_name"].ToString()! : "",
-                        Country = "Unknown", // User will need to update this
-                        City = "Unknown", // User will need to update this
+                        FirstName = googleAuthDto.FirstName,
+                        LastName = googleAuthDto.LastName,
+                        Country = googleAuthDto.Country,
+                        City = googleAuthDto.City,
                         GoogleId = firebaseToken.Uid,
                         IsGoogleAuth = true,
                         CreatedAt = DateTime.UtcNow
@@ -146,6 +146,34 @@ namespace IMDB.Controllers
                     {
                         user.GoogleId = firebaseToken.Uid;
                         user.IsGoogleAuth = true;
+                        await _context.SaveChangesAsync();
+                    }
+                    
+                    // Update user info if it's empty (for existing users)
+                    bool needsUpdate = false;
+                    if (string.IsNullOrEmpty(user.FirstName) && !string.IsNullOrEmpty(googleAuthDto.FirstName))
+                    {
+                        user.FirstName = googleAuthDto.FirstName;
+                        needsUpdate = true;
+                    }
+                    if (string.IsNullOrEmpty(user.LastName) && !string.IsNullOrEmpty(googleAuthDto.LastName))
+                    {
+                        user.LastName = googleAuthDto.LastName;
+                        needsUpdate = true;
+                    }
+                    if ((user.Country == "Unknown" || string.IsNullOrEmpty(user.Country)) && !string.IsNullOrEmpty(googleAuthDto.Country))
+                    {
+                        user.Country = googleAuthDto.Country;
+                        needsUpdate = true;
+                    }
+                    if ((user.City == "Unknown" || string.IsNullOrEmpty(user.City)) && !string.IsNullOrEmpty(googleAuthDto.City))
+                    {
+                        user.City = googleAuthDto.City;
+                        needsUpdate = true;
+                    }
+                    
+                    if (needsUpdate)
+                    {
                         await _context.SaveChangesAsync();
                     }
                 }

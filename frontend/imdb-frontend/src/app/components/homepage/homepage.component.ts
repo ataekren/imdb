@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
 
-import { HeaderComponent } from '../header/header.component';
 import { MovieSliderComponent } from '../movie-slider/movie-slider.component';
 import { ApiService } from '../../services/api.service';
 import { LanguageService } from '../../services/language.service';
@@ -14,7 +13,6 @@ import { MovieSummary } from '../../models/movie.model';
   standalone: true,
   imports: [
     CommonModule,
-    HeaderComponent,
     MovieSliderComponent
   ],
   templateUrl: './homepage.component.html',

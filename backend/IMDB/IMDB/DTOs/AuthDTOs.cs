@@ -41,6 +41,18 @@ namespace IMDB.DTOs
     {
         [Required]
         public string IdToken { get; set; } = string.Empty;
+        
+        [Required]
+        public string FirstName { get; set; } = string.Empty;
+        
+        [Required]
+        public string LastName { get; set; } = string.Empty;
+        
+        [Required]
+        public string Country { get; set; } = string.Empty;
+        
+        [Required]
+        public string City { get; set; } = string.Empty;
     }
 
     public class AuthResponseDto

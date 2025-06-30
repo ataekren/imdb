@@ -20,6 +20,7 @@ export interface Translations {
   
   // Movies
   popularMovies: string;
+  popularMoviesDescription: string;
   imdbScore: string;
   year: string;
   duration: string;
@@ -44,6 +45,24 @@ export interface Translations {
   ranking: string;
   comments: string;
   ratings: string;
+  
+  // Auth
+  email: string;
+  password: string;
+  signUp: string;
+  loginWithGoogle: string;
+  forgotPassword: string;
+  rememberMe: string;
+  fillAllFields: string;
+  googleLoginFailed: string;
+  googleSignInFailed: string;
+  loginFailed: string;
+  dontHaveAccount: string;
+  alreadyHaveAccount: string;
+  
+  // Countries and Cities
+  turkey: string;
+  istanbul: string;
 }
 
 @Injectable({
@@ -69,7 +88,8 @@ export class LanguageService {
       searchAll: 'All',
       
       // Movies
-      popularMovies: 'Popular Movies',
+      popularMovies: 'Top 10 on IMDB this week',
+      popularMoviesDescription: 'Discover the most popular movies with ratings, trailers, and reviews',
       imdbScore: 'IMDB Score',
       year: 'Year',
       duration: 'Duration',
@@ -93,7 +113,25 @@ export class LanguageService {
       popularity: 'Popularity',
       ranking: 'Ranking',
       comments: 'Comments',
-      ratings: 'Ratings'
+      ratings: 'Ratings',
+      
+      // Auth
+      email: 'Email',
+      password: 'Password',
+      signUp: 'Sign Up',
+      loginWithGoogle: 'Login with Google',
+      forgotPassword: 'Forgot Password',
+      rememberMe: 'Remember Me',
+      fillAllFields: 'Fill all fields',
+      googleLoginFailed: 'Google Login Failed',
+      googleSignInFailed: 'Google Sign In Failed',
+      loginFailed: 'Login Failed',
+      dontHaveAccount: "Don't have an account?",
+      alreadyHaveAccount: 'Already have an account?',
+      
+      // Countries and Cities
+      turkey: 'Turkey',
+      istanbul: 'Istanbul'
     },
     tr: {
       // Header
@@ -111,6 +149,7 @@ export class LanguageService {
       
       // Movies
       popularMovies: 'Popüler Filmler',
+      popularMoviesDescription: 'En popüler filmleri puanları, fragmanları ve yorumlarıyla keşfedin',
       imdbScore: 'IMDB Puanı',
       year: 'Yıl',
       duration: 'Süre',
@@ -134,7 +173,25 @@ export class LanguageService {
       popularity: 'Popülerlik',
       ranking: 'Sıralama',
       comments: 'Yorumlar',
-      ratings: 'Puanlar'
+      ratings: 'Puanlar',
+      
+      // Auth
+      email: 'Email',
+      password: 'Şifre',
+      signUp: 'Kayıt Ol',
+      loginWithGoogle: 'Google ile Giriş Yap',
+      forgotPassword: 'Şifremi Unuttum',
+      rememberMe: 'Beni Hatırla',
+      fillAllFields: 'Tüm alanları doldurun',
+      googleLoginFailed: 'Google Girişi Başarısız',
+      googleSignInFailed: 'Google Girişi Başarısız',
+      loginFailed: 'Giriş Başarısız',
+      dontHaveAccount: 'Hesabınız yok mu?',
+      alreadyHaveAccount: 'Zaten bir hesabınız var mı?',
+      
+      // Countries and Cities
+      turkey: 'Türkiye',
+      istanbul: 'İstanbul'
     }
   };
 

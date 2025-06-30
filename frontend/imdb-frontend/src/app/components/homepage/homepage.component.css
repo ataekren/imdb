@@ -1,102 +1,19 @@
 .homepage {
   min-height: 100vh;
-  background: linear-gradient(
-    135deg,
-    #0f1419 0%,
-    #1a252f 50%,
-    #2d3748 100%
-  );
+  background: #000000;
   color: white;
 }
 
 /* Main Content */
 .main-content {
-  min-height: calc(100vh - 140px);
-}
-
-/* Hero Section */
-.hero-section {
-  background: linear-gradient(
-    rgba(0, 0, 0, 0.6),
-    rgba(0, 0, 0, 0.4)
-  ),
-  url('https://images.unsplash.com/photo-1489599735734-79b4169339a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  padding: 80px 0;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    45deg,
-    rgba(15, 20, 25, 0.8),
-    rgba(26, 37, 47, 0.6),
-    rgba(45, 55, 72, 0.4)
-  );
-  animation: gradientShift 8s ease-in-out infinite;
-}
-
-@keyframes gradientShift {
-  0%, 100% {
-    opacity: 0.8;
-  }
-  50% {
-    opacity: 0.6;
-  }
-}
-
-.hero-content {
-  position: relative;
-  z-index: 2;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.hero-title {
-  font-size: 48px;
-  font-weight: 700;
-  margin: 0 0 24px 0;
-  background: linear-gradient(45deg, #f5c518, #ffd700);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  animation: titleGlow 3s ease-in-out infinite;
-}
-
-@keyframes titleGlow {
-  0%, 100% {
-    filter: drop-shadow(0 0 10px rgba(245, 197, 24, 0.5));
-  }
-  50% {
-    filter: drop-shadow(0 0 20px rgba(245, 197, 24, 0.8));
-  }
-}
-
-.hero-subtitle {
-  font-size: 18px;
-  color: rgba(255, 255, 255, 0.9);
-  margin: 0;
-  line-height: 1.6;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  min-height: calc(100vh - 64px - 140px); /* Account for header height (64px) and footer */
+  padding-top: 20px; /* Add some breathing room after the header */
 }
 
 /* Movies Section */
 .movies-section {
-  padding: 40px 0;
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
+  padding: 20px 0 40px 0;
+  background: #000000;
 }
 
 /* Loading State */
@@ -139,7 +56,6 @@
   background: rgba(229, 9, 20, 0.1);
   border: 1px solid rgba(229, 9, 20, 0.3);
   border-radius: 12px;
-  backdrop-filter: blur(10px);
 }
 
 .error-message h3 {
@@ -163,13 +79,11 @@
   cursor: pointer;
   font-weight: 600;
   font-size: 14px;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .retry-button:hover {
   background: #e6b800;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Additional Sections */
@@ -184,7 +98,7 @@
 
 /* Footer */
 .footer {
-  background: #0f1419;
+  background: #000000;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding: 40px 0;
   margin-top: auto;
@@ -214,7 +128,6 @@
 
 .footer-link {
   color: rgba(255, 255, 255, 0.7);
-  text-decoration: none;
   font-size: 14px;
   transition: color 0.2s ease;
 }
@@ -223,73 +136,34 @@
   color: #f5c518;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
-  .hero-section {
-    padding: 60px 0;
-    background-attachment: scroll;
+  .movies-section {
+    padding: 15px 0 40px 0;
   }
-  
-  .hero-title {
-    font-size: 36px;
-  }
-  
-  .hero-subtitle {
-    font-size: 16px;
-  }
-  
+
   .footer-content {
     flex-direction: column;
     text-align: center;
-    gap: 16px;
   }
-  
+
   .footer-links {
-    gap: 20px;
+    gap: 16px;
   }
 }
 
 @media (max-width: 480px) {
-  .hero-content {
-    padding: 0 16px;
-  }
-  
-  .hero-title {
-    font-size: 28px;
-  }
-  
-  .hero-subtitle {
-    font-size: 14px;
-  }
-  
   .loading-state,
   .error-state {
     padding: 60px 16px;
   }
-  
+
   .error-message {
     padding: 24px;
   }
-  
+
   .footer-links {
-    gap: 16px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-}
-
-/* Animation for smooth transitions */
-.movies-section {
-  animation: fadeInUp 0.8s ease-out;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
   }
 } 

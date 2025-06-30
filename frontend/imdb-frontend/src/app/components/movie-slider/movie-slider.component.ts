@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, throttleTime } from 'rxjs/operators';
 
 import { MovieSummary } from '../../models/movie.model';
 import { LanguageService } from '../../services/language.service';
@@ -21,6 +21,7 @@ export class MovieSliderComponent implements OnInit, OnDestroy {
   @Input() title: string = '';
   
   private destroy$ = new Subject<void>();
+  private resize$ = new Subject<void>();
   
   currentSlide = 0;
   slidesToShow = 5;
@@ -41,13 +42,28 @@ export class MovieSliderComponent implements OnInit, OnDestroy {
       });
 
     this.updateSlidesToShow();
-    window.addEventListener('resize', () => this.updateSlidesToShow());
+    
+    // Throttle resize events for better performance
+    this.resize$
+      .pipe(
+        takeUntil(this.destroy$),
+        throttleTime(100)
+      )
+      .subscribe(() => {
+        this.updateSlidesToShow();
+      });
+
+    window.addEventListener('resize', this.onResize.bind(this));
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    window.removeEventListener('resize', () => this.updateSlidesToShow());
+    window.removeEventListener('resize', this.onResize.bind(this));
+  }
+
+  private onResize(): void {
+    this.resize$.next();
   }
 
   private updateSlidesToShow(): void {

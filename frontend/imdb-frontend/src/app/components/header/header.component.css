@@ -1,10 +1,10 @@
 .app-header {
-  background: linear-gradient(135deg, #0f1419 0%, #1a252f 100%);
+  background: #111111;
   border-bottom: 2px solid #f5c518;
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 
 .header-container {
@@ -20,11 +20,11 @@
 /* Logo */
 .logo {
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform 0.1s ease;
 }
 
 .logo:hover {
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
 .logo h1 {
@@ -34,7 +34,7 @@
   margin: 0;
   font-family: 'Arial Black', sans-serif;
   letter-spacing: -1px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 /* Search Section */
@@ -50,14 +50,13 @@
   border-radius: 24px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
+  transition: border-color 0.2s ease;
 }
 
 .search-container:hover,
 .search-container:focus-within {
   background: rgba(255, 255, 255, 0.15);
   border-color: #f5c518;
-  box-shadow: 0 0 0 2px rgba(245, 197, 24, 0.3);
 }
 
 .search-type-select {
@@ -73,7 +72,7 @@
 }
 
 .search-type-select option {
-  background: #1a252f;
+  background: #111111;
   color: white;
 }
 
@@ -120,11 +119,11 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: #1a252f;
+  background: #111111;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   margin-top: 4px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
   z-index: 1001;
   max-height: 300px;
   overflow-y: auto;
@@ -136,7 +135,7 @@
   padding: 12px 16px;
   cursor: pointer;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  transition: background-color 0.2s ease;
+  transition: background-color 0.15s ease;
 }
 
 .search-result-item:hover {
@@ -201,9 +200,9 @@
   color: rgba(255, 255, 255, 0.8);
   padding: 8px 12px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
+  transition: color 0.2s ease;
 }
 
 .lang-button.active {
@@ -212,29 +211,55 @@
 }
 
 .lang-button:hover:not(.active) {
-  background: rgba(255, 255, 255, 0.1);
   color: white;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* Auth Section */
-.login-button,
-.logout-button {
-  background: #f5c518;
-  border: none;
-  color: #0f1419;
-  padding: 10px 20px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.2s ease;
+.auth-section {
+  display: flex;
+  gap: 8px;
 }
 
-.login-button:hover,
+.login-button,
+.signup-button,
+.logout-button {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.login-button {
+  background: #f5c518;
+  color: #0f1419;
+}
+
+.login-button:hover {
+  background: #e6b800;
+}
+
+.signup-button {
+  background: transparent;
+  color: #f5c518;
+  border: 2px solid #f5c518;
+}
+
+.signup-button:hover {
+  background: #f5c518;
+  color: #0f1419;
+}
+
+.logout-button {
+  background: #f5c518;
+  color: #0f1419;
+}
+
 .logout-button:hover {
   background: #e6b800;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .user-menu {
@@ -245,16 +270,17 @@
 
 .user-info {
   color: white;
-  font-size: 14px;
 }
 
 .welcome-text {
-  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  opacity: 0.8;
 }
 
 .user-name {
-  color: #f5c518;
+  font-size: 16px;
   font-weight: 600;
+  color: #f5c518;
 }
 
 /* Responsive Design */
@@ -265,7 +291,7 @@
   }
 
   .logo h1 {
-    font-size: 24px;
+    font-size: 28px;
   }
 
   .search-section {
@@ -274,7 +300,6 @@
 
   .search-type-select,
   .search-input {
-    padding: 10px 12px;
     font-size: 14px;
   }
 
@@ -284,32 +309,37 @@
 
   .lang-button {
     padding: 6px 10px;
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .login-button,
+  .signup-button,
   .logout-button {
     padding: 8px 16px;
-    font-size: 13px;
+    font-size: 14px;
+  }
+
+  .auth-section {
+    gap: 6px;
   }
 }
 
 @media (max-width: 480px) {
   .header-container {
-    height: 56px;
-    gap: 12px;
+    padding: 0 12px;
+    flex-wrap: wrap;
   }
 
   .logo h1 {
-    font-size: 20px;
+    font-size: 24px;
   }
 
   .search-container {
-    border-radius: 20px;
+    flex-direction: column;
   }
 
   .search-type-select {
-    display: none;
+    border-right: none;
   }
 
   .user-info .welcome-text {

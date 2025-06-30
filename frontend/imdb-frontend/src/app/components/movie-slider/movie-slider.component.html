@@ -75,12 +75,29 @@
             <span class="genre">{{ movie.genre }}</span>
           </div>
           <div class="movie-stats">
-                       <span class="rating">
-               ⭐ {{ movie.averageRating ? movie.averageRating.toFixed(1) : movie.imdbScore }}/10
-             </span>
+            <span class="rating">
+              ⭐ {{ movie.averageRating ? movie.averageRating.toFixed(1) : movie.imdbScore }}/10
+            </span>
             <span class="votes" *ngIf="movie.totalRatings">
               ({{ movie.totalRatings }})
             </span>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="movie-action-buttons">
+            <button 
+              class="action-btn watchlist-btn"
+              [class.in-watchlist]="movie.isInWatchlist"
+              (click)="onWatchlistToggle($event, movie)">
+              {{ movie.isInWatchlist ? '✓ In Watchlist' : '+ Add to Watchlist' }}
+            </button>
+            
+            <button 
+              class="action-btn trailer-btn"
+              [disabled]="!movie.trailerUrl"
+              (click)="onTrailerClick($event, movie)">
+              🎬 Watch Trailer
+            </button>
           </div>
         </div>
       </div>

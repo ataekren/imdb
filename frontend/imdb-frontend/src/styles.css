@@ -10,7 +10,7 @@ html, body {
   padding: 0;
   height: 100%;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #0f1419;
+  background: #000000;
   color: white;
   overflow-x: hidden;
 }
@@ -180,5 +180,27 @@ textarea:focus {
   * {
     background: white !important;
     color: black !important;
+  }
+}
+
+/* Performance optimizations */
+* {
+  will-change: auto;
+}
+
+.movie-card,
+.nav-button,
+.search-result-item {
+  will-change: transform;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

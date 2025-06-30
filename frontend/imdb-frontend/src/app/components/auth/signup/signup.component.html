@@ -1,0 +1,120 @@
+<div class="signup-container">
+  <div class="signup-card">
+    <div class="signup-header">
+      <h1>{{ languageService.translate('signUp') }}</h1>
+      <p class="signup-subtitle">Join the IMDB community</p>
+    </div>
+
+    <div class="signup-form">
+      <form (ngSubmit)="onSignup()" #signupForm="ngForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              [(ngModel)]="registerData.firstName"
+              required
+              [disabled]="isLoading"
+              placeholder="Enter your first name">
+          </div>
+
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              [(ngModel)]="registerData.lastName"
+              required
+              [disabled]="isLoading"
+              placeholder="Enter your last name">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">{{ languageService.translate('email') }}</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            [(ngModel)]="registerData.email"
+            required
+            [disabled]="isLoading"
+            placeholder="Enter your email">
+        </div>
+
+        <div class="form-group">
+          <label for="password">{{ languageService.translate('password') }}</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="registerData.password"
+            required
+            [disabled]="isLoading"
+            placeholder="At least 8 characters, 1 number, 1 special character">
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            [(ngModel)]="confirmPassword"
+            required
+            [disabled]="isLoading"
+            placeholder="Confirm your password">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="country">Country</label>
+            <select
+              id="country"
+              name="country"
+              [(ngModel)]="registerData.country"
+              required
+              [disabled]="isLoading">
+              <option value="">Select Country</option>
+              <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="city">City</label>
+            <input
+              type="text"
+              id="city"
+              name="city"
+              [(ngModel)]="registerData.city"
+              required
+              [disabled]="isLoading"
+              placeholder="Enter your city">
+          </div>
+        </div>
+
+        <button 
+          type="submit" 
+          class="signup-btn"
+          [disabled]="isLoading || !signupForm.form.valid">
+          <span *ngIf="isLoading" class="spinner"></span>
+          {{ languageService.translate('signUp') }}
+        </button>
+      </form>
+
+      <!-- Error Message -->
+      <div *ngIf="error" class="error-message">
+        {{ error }}
+      </div>
+
+      <!-- Login Link -->
+      <div class="login-link">
+        <span>{{ languageService.translate('alreadyHaveAccount') }}</span>
+        <a routerLink="/login">{{ languageService.translate('login') }}</a>
+      </div>
+    </div>
+  </div>
+</div>
