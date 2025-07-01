@@ -187,7 +187,7 @@ namespace IMDB.Services
         public async Task<List<MovieSummaryDto>> GetQuickSearchAsync(string query, int limit = 3, int? userId = null)
         {
             if (string.IsNullOrWhiteSpace(query))
-            {
+        {
                 return new List<MovieSummaryDto>();
             }
 
@@ -247,7 +247,7 @@ namespace IMDB.Services
         public async Task UpdateAllMoviePopularityAsync()
         {
             var movies = await _context.Movies.Include(m => m.Ratings).ToListAsync();
-
+            
             foreach (var movie in movies)
             {
                 var ratingCount = movie.Ratings.Count;
