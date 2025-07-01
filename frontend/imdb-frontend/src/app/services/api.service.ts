@@ -5,7 +5,8 @@ import {
   Movie, 
   MovieSummary, 
   SearchResult, 
-  Comment 
+  Comment,
+  RatingDistribution
 } from '../models/movie.model';
 import { 
   AuthResponse, 
@@ -35,6 +36,16 @@ export class ApiService {
     });
   }
 
+  private getAuthHeaders(): HttpHeaders {
+    let token: string | null = null;
+    if (typeof localStorage !== 'undefined') {
+      token = localStorage.getItem('token');
+    }
+    return new HttpHeaders({
+      ...(token && { 'Authorization': `Bearer ${token}` })
+    });
+  }
+
   // Authentication endpoints
   register(data: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.baseUrl}/auth/register`, data);
@@ -48,9 +59,23 @@ export class ApiService {
     return this.http.post<AuthResponse>(`${this.baseUrl}/auth/google`, data);
   }
 
+  uploadProfilePicture(file: File): Observable<{message: string, user: any}> {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    return this.http.post<{message: string, user: any}>(
+      `${this.baseUrl}/auth/upload-profile-picture`, 
+      formData,
+      { headers: this.getAuthHeaders() }
+    );
+  }
+
   // Movie endpoints
   getPopularMovies(count: number = 10): Observable<MovieSummary[]> {
-    return this.http.get<MovieSummary[]>(`${this.baseUrl}/movies/popular?count=${count}`);
+    return this.http.get<MovieSummary[]>(
+      `${this.baseUrl}/movies/popular?count=${count}`,
+      { headers: this.getHeaders() }
+    );
   }
 
   getMovie(id: number): Observable<Movie> {
@@ -64,12 +89,13 @@ export class ApiService {
     if (type) {
       url += `&type=${type}`;
     }
-    return this.http.get<SearchResult>(url);
+    return this.http.get<SearchResult>(url, { headers: this.getHeaders() });
   }
 
   quickSearch(query: string, limit: number = 3): Observable<MovieSummary[]> {
     return this.http.get<MovieSummary[]>(
-      `${this.baseUrl}/movies/quick-search?query=${encodeURIComponent(query)}&limit=${limit}`
+      `${this.baseUrl}/movies/quick-search?query=${encodeURIComponent(query)}&limit=${limit}`,
+      { headers: this.getHeaders() }
     );
   }
 
@@ -115,6 +141,13 @@ export class ApiService {
   getMovieComments(movieId: number, page: number = 1, pageSize: number = 10): Observable<Comment[]> {
     return this.http.get<Comment[]>(
       `${this.baseUrl}/movies/${movieId}/comments?page=${page}&pageSize=${pageSize}`
+    );
+  }
+
+  getRatingDistribution(movieId: number): Observable<RatingDistribution[]> {
+    return this.http.get<RatingDistribution[]>(
+      `${this.baseUrl}/movies/${movieId}/rating-distribution`,
+      { headers: this.getHeaders() }
     );
   }
 } 

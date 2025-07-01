@@ -37,20 +37,42 @@
           <div class="search-loading" *ngIf="isSearching">
             {{ translations.loading }}
           </div>
-          <div class="search-result-item" 
-               *ngFor="let movie of results" 
-               (click)="onMovieSelect(movie)">
-            <img [src]="movie.imageUrl || 'assets/movie-placeholder.jpg'" 
-                 [alt]="getMovieTitle(movie)"
-                 class="result-image">
-            <div class="result-info">
-              <div class="result-title">{{ getMovieTitle(movie) }}</div>
-              <div class="result-meta">
-                {{ movie.releaseYear }} • ⭐ {{ movie.imdbScore }}/10
+
+          <!-- Movies Section -->
+          <div class="search-category" *ngIf="results.movies.length > 0">
+            <div class="category-title">{{ translations.searchMovies }}</div>
+            <div class="search-result-item" 
+                 *ngFor="let movie of results.movies" 
+                 (click)="onMovieSelect(movie)">
+              <img [src]="movie.imageUrl || 'assets/movie-placeholder.jpg'" 
+                   [alt]="getMovieTitle(movie)"
+                   class="result-image">
+              <div class="result-info">
+                <div class="result-title">{{ getMovieTitle(movie) }}</div>
+                <div class="result-meta">
+                  {{ movie.releaseYear }} • ⭐ {{ movie.imdbScore }}/10
+                </div>
               </div>
             </div>
           </div>
-          <div class="no-results" *ngIf="!isSearching && results.length === 0 && searchControl.value && searchControl.value.length >= 3">
+
+          <!-- Actors Section -->
+          <div class="search-category" *ngIf="results.actors.length > 0">
+            <div class="category-title">{{ translations.searchActors }}</div>
+            <div class="search-result-item" 
+                 *ngFor="let actor of results.actors" 
+                 (click)="onActorSelect(actor)">
+              <div class="result-info">
+                <div class="result-title">{{ actor.firstName }} {{ actor.lastName }}</div>
+                <div class="result-meta" *ngIf="actor.nationality">
+                  {{ actor.nationality }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="no-results" 
+               *ngIf="!isSearching && results.movies.length === 0 && results.actors.length === 0 && searchControl.value && searchControl.value.length >= 3">
             {{ translations.noResults }}
           </div>
         </div>
@@ -58,7 +80,86 @@
     </div>
 
     <!-- User Section -->
-    <div class="user-section">
+    <div class="user-section" (click)="closeProfileUpload($event)">
+
+      <div class="user-menu" *ngIf="isLoggedIn">
+        <div class="user-info">
+          <div class="user-avatar" (click)="toggleProfileUpload()" title="Click to change profile picture">
+            <img 
+              *ngIf="currentUser?.profilePicture" 
+              [src]="currentUser?.profilePicture" 
+              [alt]="(currentUser?.firstName || '') + ' ' + (currentUser?.lastName || '')"
+              class="profile-picture">
+            <div 
+              *ngIf="!currentUser?.profilePicture" 
+              class="default-avatar">
+              {{ getInitials(currentUser) }}
+            </div>
+            <div class="upload-overlay">
+              <span class="upload-icon">📷</span>
+            </div>
+          </div>
+          <div class="user-details">
+            <span class="welcome-text">{{ translations.welcome }}, </span>
+            <span class="user-name">{{ currentUser?.firstName }}</span>
+          </div>
+        </div>
+
+        <!-- Profile Upload Dropdown -->
+        <div class="profile-upload-dropdown" *ngIf="showProfileUpload" (click)="$event.stopPropagation()">
+          <div class="upload-content">
+            <h3>Update Profile Picture</h3>
+            
+            <div *ngIf="!profilePicturePreview" class="file-upload-area">
+              <input
+                type="file"
+                id="headerProfilePicture"
+                name="headerProfilePicture"
+                (change)="onFileSelected($event)"
+                accept="image/*"
+                [disabled]="isUploading"
+                class="file-input">
+              <label for="headerProfilePicture" class="file-upload-label">
+                <span class="upload-icon">📷</span>
+                <span>Choose Picture</span>
+                <small>JPEG, PNG, GIF or WebP (Max 5MB)</small>
+              </label>
+            </div>
+
+            <div *ngIf="profilePicturePreview" class="profile-preview">
+              <img [src]="profilePicturePreview" alt="Profile Preview" class="preview-image">
+              <div class="preview-actions">
+                <button 
+                  type="button" 
+                  class="upload-btn" 
+                  (click)="uploadProfilePicture()" 
+                  [disabled]="isUploading">
+                  <span *ngIf="isUploading" class="spinner"></span>
+                  <span *ngIf="!isUploading">Upload</span>
+                  <span *ngIf="isUploading">Uploading...</span>
+                </button>
+                <button 
+                  type="button" 
+                  class="cancel-btn" 
+                  (click)="removeProfilePicture()" 
+                  [disabled]="isUploading">
+                  Cancel
+                </button>
+              </div>
+            </div>
+
+            <!-- Messages -->
+            <div *ngIf="uploadError" class="error-message">
+              {{ uploadError }}
+            </div>
+
+            <div *ngIf="uploadSuccess" class="success-message">
+              {{ uploadSuccess }}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Language Switcher -->
       <div class="language-switcher">
         <button 
@@ -75,7 +176,7 @@
         </button>
       </div>
 
-      <!-- Auth Section -->
+      <!-- Auth Section for non-logged in users -->
       <div class="auth-section" *ngIf="!isLoggedIn">
         <button class="login-button" (click)="onLogin()">
           {{ translations.login }}
@@ -85,11 +186,8 @@
         </button>
       </div>
 
-      <div class="user-menu" *ngIf="isLoggedIn">
-        <div class="user-info">
-          <span class="welcome-text">{{ translations.welcome }}, </span>
-          <span class="user-name">{{ currentUser?.firstName }}</span>
-        </div>
+      <!-- Logout Button for logged in users -->
+      <div class="logout-section" *ngIf="isLoggedIn">
         <button class="logout-button" (click)="onLogout()">
           {{ translations.logout }}
         </button>

@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BCrypt.Net;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using IMDB.Data;
 using IMDB.Models;
 using IMDB.DTOs;
@@ -16,17 +18,20 @@ namespace IMDB.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IJwtService _jwtService;
         private readonly IFirebaseAuthService _firebaseAuthService;
+        private readonly IFileUploadService _fileUploadService;
         private readonly IMapper _mapper;
 
         public AuthController(
             ApplicationDbContext context,
             IJwtService jwtService,
             IFirebaseAuthService firebaseAuthService,
+            IFileUploadService fileUploadService,
             IMapper mapper)
         {
             _context = context;
             _jwtService = jwtService;
             _firebaseAuthService = firebaseAuthService;
+            _fileUploadService = fileUploadService;
             _mapper = mapper;
         }
 
@@ -131,6 +136,7 @@ namespace IMDB.Controllers
                         LastName = googleAuthDto.LastName,
                         Country = googleAuthDto.Country,
                         City = googleAuthDto.City,
+                        ProfilePicture = googleAuthDto.ImageUrl,
                         GoogleId = firebaseToken.Uid,
                         IsGoogleAuth = true,
                         CreatedAt = DateTime.UtcNow
@@ -171,6 +177,11 @@ namespace IMDB.Controllers
                         user.City = googleAuthDto.City;
                         needsUpdate = true;
                     }
+                    if (string.IsNullOrEmpty(user.ProfilePicture) && !string.IsNullOrEmpty(googleAuthDto.ImageUrl))
+                    {
+                        user.ProfilePicture = googleAuthDto.ImageUrl;
+                        needsUpdate = true;
+                    }
                     
                     if (needsUpdate)
                     {
@@ -195,6 +206,46 @@ namespace IMDB.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, new { message = "Google authentication failed", error = ex.Message });
+            }
+        }
+
+        [HttpPost("upload-profile-picture")]
+        [Authorize]
+        public async Task<IActionResult> UploadProfilePicture(IFormFile file)
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+                {
+                    return Unauthorized(new { message = "Invalid user" });
+                }
+
+                var user = await _context.Users.FindAsync(userId);
+                if (user == null)
+                {
+                    return NotFound(new { message = "User not found" });
+                }
+
+                // Upload file to Supabase
+                var profilePictureUrl = await _fileUploadService.UploadProfilePictureAsync(file, userId.ToString());
+
+                // Update user's profile picture
+                user.ProfilePicture = profilePictureUrl;
+                user.UpdatedAt = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+
+                var userDto = _mapper.Map<UserDto>(user);
+
+                return Ok(new { message = "Profile picture uploaded successfully", user = userDto });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Failed to upload profile picture", error = ex.Message });
             }
         }
     }

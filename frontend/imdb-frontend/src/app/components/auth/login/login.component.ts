@@ -49,7 +49,8 @@ export class LoginComponent {
         firstName: firstName,
         lastName: lastName,
         country: 'Turkey',      // Default country
-        city: 'Istanbul'        // Default city
+        city: 'Istanbul',       // Default city
+        imageUrl: result.user.photoURL || undefined
       };
 
       this.authService.googleAuth(googleAuthRequest).subscribe({

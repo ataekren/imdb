@@ -1,0 +1,57 @@
+<div class="rating-detail-page">
+
+    <!-- Movie Info Banner -->
+    <div class="movie-banner" *ngIf="movie">
+      <img class="banner-poster" [src]="movie.imageUrl || 'assets/movie-placeholder.jpg'" [alt]="movie.title">
+      <div class="banner-details">
+        <h3 class="banner-title">{{ movie.title }}</h3>
+        <p class="banner-meta">{{ movie.releaseYear }} • ⭐ {{ movie.imdbScore }}/10 <span *ngIf="movie.totalRatings">({{ movie.totalRatings }})</span></p>
+      </div>
+    </div>
+
+  <h2 class="page-title">{{ translations.ratings }}</h2>
+
+  <div *ngIf="isLoading" class="loading">{{ translations.loading }}</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div *ngIf="!isLoading && !error">
+    <!-- Country Filter -->
+    <div class="country-filter" *ngIf="countries.length > 0">
+      <span class="filter-label">FILTER BY COUNTRY</span>
+      <div class="country-tabs">
+        <button 
+          class="country-tab" 
+          [class.active]="selectedCountry === 'All'"
+          (click)="selectCountry('All')">
+          All
+        </button>
+        <button 
+          class="country-tab" 
+          *ngFor="let c of countries"
+          [class.active]="selectedCountry === c"
+          (click)="selectCountry(c)">
+          {{ c }}
+        </button>
+      </div>
+    </div>
+
+
+
+    <!-- Bar Chart -->
+    <div class="bar-chart" *ngIf="bars.length > 0">
+      <div class="bar-row" *ngFor="let bar of bars">
+        <div class="score-label">{{ bar.score }}</div>
+        <div class="bar-container">
+          <div class="bar-fill" [style.width.%]="bar.percent">
+            <span class="bar-info" *ngIf="bar.count > 0">
+              {{ formatPercent(bar.percent) }}% ({{ formatCount(bar.count) }})
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-ratings" *ngIf="totalRatings === 0">{{ translations.noResults }}</div>
+
+  </div>
+</div> 

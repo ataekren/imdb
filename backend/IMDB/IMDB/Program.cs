@@ -58,10 +58,27 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Configure Supabase
+builder.Services.AddScoped<Supabase.Client>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var supabaseUrl = configuration.GetConnectionString("SupabaseUrl") ?? throw new InvalidOperationException("SupabaseUrl is not configured");
+    var supabaseKey = configuration.GetConnectionString("SupabaseKey") ?? throw new InvalidOperationException("SupabaseKey is not configured");
+    
+    var options = new Supabase.SupabaseOptions
+    {
+        AutoRefreshToken = true,
+        AutoConnectRealtime = true
+    };
+    
+    return new Supabase.Client(supabaseUrl, supabaseKey, options);
+});
+
 // Register custom services
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IFirebaseAuthService, FirebaseAuthService>();
 builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<IFileUploadService, SupabaseFileUploadService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

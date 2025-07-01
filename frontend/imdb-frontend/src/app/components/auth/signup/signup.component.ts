@@ -30,10 +30,74 @@ export class SignupComponent {
   isLoading = false;
   error = '';
 
+  // Profile picture properties
+  selectedFile: File | null = null;
+  profilePicturePreview: string | null = null;
+  isUploadingProfilePicture = false;
+
   countries = [
     'United States', 'Turkey', 'United Kingdom', 'Germany', 'France', 
     'Spain', 'Italy', 'Canada', 'Australia', 'Japan', 'Other'
   ];
+
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        this.error = 'Please select a valid image file (JPEG, PNG, GIF, or WebP)';
+        return;
+      }
+
+      // Validate file size (5MB max)
+      if (file.size > 5 * 1024 * 1024) {
+        this.error = 'File size must be less than 5MB';
+        return;
+      }
+
+      this.selectedFile = file;
+      this.error = '';
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.profilePicturePreview = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeProfilePicture() {
+    this.selectedFile = null;
+    this.profilePicturePreview = null;
+  }
+
+  private uploadProfilePicture() {
+    if (!this.selectedFile) {
+      this.router.navigate(['/']);
+      return;
+    }
+
+    this.isUploadingProfilePicture = true;
+    
+    this.authService.uploadProfilePicture(this.selectedFile).subscribe({
+      next: (response) => {
+        console.log('Profile picture uploaded successfully:', response);
+        this.isUploadingProfilePicture = false;
+        this.isLoading = false;
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        console.error('Profile picture upload failed:', error);
+        this.isUploadingProfilePicture = false;
+        this.isLoading = false;
+        // Still navigate to home even if profile picture upload fails
+        // The user is already registered successfully
+        this.router.navigate(['/']);
+      }
+    });
+  }
 
   onSignup() {
     // Basic validation
@@ -71,7 +135,13 @@ export class SignupComponent {
     this.authService.register(this.registerData).subscribe({
       next: (response) => {
         console.log('Registration successful:', response);
+        
+        // If a profile picture was selected, upload it after successful registration
+        if (this.selectedFile) {
+          this.uploadProfilePicture();
+        } else {
         this.router.navigate(['/']);
+        }
       },
       error: (error) => {
         console.error('Registration failed:', error);

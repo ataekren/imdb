@@ -96,12 +96,42 @@
           </div>
         </div>
 
+        <!-- Profile Picture Upload -->
+        <div class="form-group profile-picture-section">
+          <label>Profile Picture (Optional)</label>
+          
+          <div *ngIf="!profilePicturePreview" class="file-upload-area">
+            <input
+              type="file"
+              id="profilePicture"
+              name="profilePicture"
+              (change)="onFileSelected($event)"
+              accept="image/*"
+              [disabled]="isLoading"
+              class="file-input">
+            <label for="profilePicture" class="file-upload-label">
+              <span class="upload-icon">📷</span>
+              <span>Choose Profile Picture</span>
+              <small>JPEG, PNG, GIF or WebP (Max 5MB)</small>
+            </label>
+          </div>
+
+          <div *ngIf="profilePicturePreview" class="profile-preview">
+            <img [src]="profilePicturePreview" alt="Profile Preview" class="preview-image">
+            <button type="button" class="remove-btn" (click)="removeProfilePicture()" [disabled]="isLoading">
+              ✕ Remove
+            </button>
+          </div>
+        </div>
+
         <button 
           type="submit" 
           class="signup-btn"
           [disabled]="isLoading || !signupForm.form.valid">
-          <span *ngIf="isLoading" class="spinner"></span>
-          {{ languageService.translate('signUp') }}
+          <span *ngIf="isLoading || isUploadingProfilePicture" class="spinner"></span>
+          <span *ngIf="!isLoading && !isUploadingProfilePicture">{{ languageService.translate('signUp') }}</span>
+          <span *ngIf="isLoading && !isUploadingProfilePicture">Creating Account...</span>
+          <span *ngIf="isUploadingProfilePicture">Uploading Profile Picture...</span>
         </button>
       </form>
 

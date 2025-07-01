@@ -25,6 +25,9 @@ namespace IMDB.DTOs
 
         [Required]
         public string City { get; set; } = string.Empty;
+
+        [MaxLength(500)]
+        public string? ProfilePicture { get; set; }
     }
 
     public class LoginDto
@@ -53,6 +56,9 @@ namespace IMDB.DTOs
         
         [Required]
         public string City { get; set; } = string.Empty;
+
+        [MaxLength(500)]
+        public string? ImageUrl { get; set; }
     }
 
     public class AuthResponseDto
@@ -69,6 +75,7 @@ namespace IMDB.DTOs
         public string LastName { get; set; } = string.Empty;
         public string Country { get; set; } = string.Empty;
         public string City { get; set; } = string.Empty;
+        public string? ProfilePicture { get; set; }
         public bool IsGoogleAuth { get; set; }
         public DateTime CreatedAt { get; set; }
     }

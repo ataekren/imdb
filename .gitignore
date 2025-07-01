@@ -192,4 +192,8 @@ out/
 
 # API keys and secrets
 # **/*secrets*.json
-# **/*keys*.json 
+# **/*keys*.json
+
+# Ignore appsettings containing secrets
+backend/IMDB/IMDB/appsettings.json
+backend/IMDB/IMDB/appsettings.Development.json 

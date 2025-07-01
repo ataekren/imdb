@@ -1,0 +1,126 @@
+.rating-detail-page {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: white;
+}
+
+.page-title {
+  font-size: 28px;
+  margin-bottom: 24px;
+  border-left: 4px solid #f5c518;
+  padding-left: 12px;
+}
+
+.country-filter {
+  margin-bottom: 24px;
+}
+
+.filter-label {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 8px;
+}
+
+.country-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.country-tab {
+  background: transparent;
+  border: 1px solid #f5c518;
+  color: #f5c518;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.country-tab.active, .country-tab:hover {
+  background: #f5c518;
+  color: #111;
+}
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.score-label {
+  width: 24px;
+  font-weight: bold;
+  text-align: right;
+}
+
+.bar-container {
+  flex: 1;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  position: relative;
+  height: 24px;
+}
+
+.bar-fill {
+  background: #f5c518;
+  height: 100%;
+  border-radius: 4px 0 0 4px;
+  position: relative;
+}
+
+.bar-info {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+  white-space: nowrap;
+}
+
+.loading, .error, .no-ratings {
+  text-align: center;
+  margin: 40px 0;
+}
+
+.error {
+  color: #ff6b6b;
+}
+
+/* Movie Banner */
+.movie-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 40px 0 32px 0;
+}
+
+.banner-poster {
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.banner-title {
+  margin: 0;
+  font-size: 20px;
+}
+
+.banner-meta {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: rgba(255,255,255,0.8);
+} 

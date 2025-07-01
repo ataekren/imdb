@@ -45,6 +45,11 @@ export interface Translations {
   ranking: string;
   comments: string;
   ratings: string;
+  statistics: string;
+  views: string;
+  yourRating: string;
+  rated: string;
+  goBack: string;
   
   // Auth
   email: string;
@@ -109,11 +114,16 @@ export class LanguageService {
       
       // Movie details
       cast: 'Cast',
-      summary: 'Summary',
+      summary: 'Synopsis',
       popularity: 'Popularity',
-      ranking: 'Ranking',
+      ranking: 'Popularity',
       comments: 'Comments',
       ratings: 'Ratings',
+      statistics: 'Statistics',
+      views: 'Views',
+      yourRating: 'Your Rating',
+      rated: 'Rated',
+      goBack: 'Back',
       
       // Auth
       email: 'Email',
@@ -171,9 +181,14 @@ export class LanguageService {
       cast: 'Oyuncular',
       summary: 'Özet',
       popularity: 'Popülerlik',
-      ranking: 'Sıralama',
+      ranking: 'Popülerlik',
       comments: 'Yorumlar',
-      ratings: 'Puanlar',
+      ratings: 'Puan',
+      statistics: 'İstatistikler',
+      views: 'Görüntülenme',
+      yourRating: 'Puanınız',
+      rated: 'Puanlandı',
+      goBack: 'Geri',
       
       // Auth
       email: 'Email',

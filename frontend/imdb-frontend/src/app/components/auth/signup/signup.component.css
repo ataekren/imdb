@@ -203,3 +203,88 @@
     font-size: 24px;
   }
 }
+
+/* Profile Picture Upload Styles */
+.profile-picture-section {
+  margin-bottom: 24px;
+}
+
+.file-upload-area {
+  border: 2px dashed #333;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+  background: #0c0c0c;
+}
+
+.file-upload-area:hover {
+  border-color: #f5c518;
+  background: rgba(245, 197, 24, 0.05);
+}
+
+.file-input {
+  display: none;
+}
+
+.file-upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #ccc;
+  transition: color 0.3s ease;
+}
+
+.file-upload-label:hover {
+  color: #f5c518;
+}
+
+.upload-icon {
+  font-size: 32px;
+  opacity: 0.7;
+}
+
+.file-upload-label small {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-top: 4px;
+}
+
+.profile-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.preview-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #f5c518;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.remove-btn {
+  background: transparent;
+  border: 1px solid #dc3545;
+  color: #dc3545;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.remove-btn:hover:not(:disabled) {
+  background: #dc3545;
+  color: #fff;
+}
+
+.remove-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -5,6 +5,7 @@ export interface User {
   lastName: string;
   country: string;
   city: string;
+  profilePicture?: string;
   isGoogleAuth: boolean;
   createdAt: string;
 }
@@ -21,6 +22,7 @@ export interface RegisterRequest {
   lastName: string;
   country: string;
   city: string;
+  profilePicture?: string;
 }
 
 export interface GoogleAuthRequest {
@@ -29,6 +31,7 @@ export interface GoogleAuthRequest {
   lastName: string;
   country: string;
   city: string;
+  imageUrl?: string;
 }
 
 export interface AuthResponse {

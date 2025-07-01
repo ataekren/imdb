@@ -40,6 +40,8 @@ namespace IMDB.DTOs
         public int PopularityRank { get; set; }
         public double AverageRating { get; set; }
         public int TotalRatings { get; set; }
+        public bool IsInWatchlist { get; set; }
+        public int? UserRating { get; set; }
     }
 
     public class ActorDto

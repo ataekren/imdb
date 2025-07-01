@@ -217,6 +217,52 @@
   font-weight: 600;
 }
 
+/* Rate Section */
+.rate-section {
+  margin: 12px 0;
+}
+
+.rate-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(245, 197, 24, 0.3);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+}
+
+.rate-btn:hover {
+  background: rgba(245, 197, 24, 0.1);
+  border-color: #f5c518;
+  transform: translateY(-1px);
+}
+
+.rate-btn.user-rated {
+  background: rgba(245, 197, 24, 0.2);
+  border-color: #f5c518;
+  color: #f5c518;
+}
+
+.rate-btn.user-rated:hover {
+  background: rgba(245, 197, 24, 0.3);
+}
+
+.rate-icon {
+  font-size: 12px;
+}
+
+.rate-text {
+  font-size: 12px;
+  font-weight: 600;
+}
+
 .movie-stats {
   display: flex;
   justify-content: space-between;

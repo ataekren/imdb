@@ -8,10 +8,10 @@ namespace IMDB.Services
 {
     public interface IMovieService
     {
-        Task<List<MovieSummaryDto>> GetPopularMoviesAsync(int count = 10);
+        Task<List<MovieSummaryDto>> GetPopularMoviesAsync(int count = 10, int? userId = null);
         Task<MovieDto?> GetMovieByIdAsync(int id, int? userId = null);
-        Task<SearchResultDto> SearchAsync(string query, string? searchType = null, int limit = 10);
-        Task<List<MovieSummaryDto>> GetQuickSearchAsync(string query, int limit = 3);
+        Task<SearchResultDto> SearchAsync(string query, string? searchType = null, int limit = 10, int? userId = null);
+        Task<List<MovieSummaryDto>> GetQuickSearchAsync(string query, int limit = 3, int? userId = null);
         Task UpdateMoviePopularityAsync(int movieId);
         Task UpdateAllMoviePopularityAsync();
         Task<List<RatingDistributionDto>> GetRatingDistributionAsync(int movieId);
@@ -28,10 +28,10 @@ namespace IMDB.Services
             _mapper = mapper;
         }
 
-        public async Task<List<MovieSummaryDto>> GetPopularMoviesAsync(int count = 10)
+        public async Task<List<MovieSummaryDto>> GetPopularMoviesAsync(int count = 10, int? userId = null)
         {
             var movies = await _context.Movies
-                .OrderByDescending(m => m.PopularityScore)
+                .OrderByDescending(m => m.IMDBScore)
                 .Take(count)
                 .ToListAsync();
 
@@ -42,6 +42,18 @@ namespace IMDB.Services
                 var ratings = await _context.Ratings.Where(r => r.MovieId == movie.Id).ToListAsync();
                 dto.AverageRating = ratings.Any() ? ratings.Average(r => r.Score) : 0;
                 dto.TotalRatings = ratings.Count;
+                
+                // Add user-specific data if userId is provided
+                if (userId.HasValue)
+                {
+                    dto.IsInWatchlist = await _context.WatchlistItems
+                        .AnyAsync(w => w.UserId == userId.Value && w.MovieId == movie.Id);
+                    
+                    var userRating = await _context.Ratings
+                        .FirstOrDefaultAsync(r => r.UserId == userId.Value && r.MovieId == movie.Id);
+                    dto.UserRating = userRating?.Score;
+                }
+                
                 movieDtos.Add(dto);
             }
 
@@ -92,55 +104,100 @@ namespace IMDB.Services
                 CharacterName = ma.CharacterName
             }).ToList();
 
-            // Update popularity after view
-            _ = Task.Run(() => UpdateMoviePopularityAsync(id));
+            // Update popularity after view synchronously to avoid DbContext concurrency issues
+            await UpdateMoviePopularityAsync(id);
 
             return dto;
         }
 
-        public async Task<SearchResultDto> SearchAsync(string query, string? searchType = null, int limit = 10)
+        public async Task<SearchResultDto> SearchAsync(string query, string? searchType = null, int limit = 10, int? userId = null)
         {
-            var result = new SearchResultDto();
+            var result = new SearchResultDto
+            {
+                Movies = new List<MovieSummaryDto>(),
+                Actors = new List<ActorDto>()
+            };
 
-            if (searchType == null || searchType == "title")
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return result;
+            }
+
+            query = query.ToLowerInvariant().Trim();
+            var type = searchType?.ToLowerInvariant().Trim();
+
+            bool searchMovies = type == null || type == "all" || type == "movies" || type == "movie";
+            bool searchActors = type == null || type == "all" || type == "actors" || type == "actor";
+
+            if (searchMovies)
             {
                 var movies = await _context.Movies
-                    .Where(m => m.Title.Contains(query) || 
-                               (m.TitleTurkish != null && m.TitleTurkish.Contains(query)) ||
-                               m.Summary.Contains(query) ||
-                               (m.SummaryTurkish != null && m.SummaryTurkish.Contains(query)))
-                    .OrderByDescending(m => m.PopularityScore)
+                    .Where(m => 
+                        EF.Functions.Like(m.Title.ToLower(), $"%{query}%") || 
+                        (m.TitleTurkish != null && EF.Functions.Like(m.TitleTurkish.ToLower(), $"%{query}%")) ||
+                        EF.Functions.Like(m.Summary.ToLower(), $"%{query}%") ||
+                        (m.SummaryTurkish != null && EF.Functions.Like(m.SummaryTurkish.ToLower(), $"%{query}%")))
+                    .OrderByDescending(m => m.IMDBScore)
                     .Take(limit)
                     .ToListAsync();
 
                 foreach (var movie in movies)
                 {
                     var dto = _mapper.Map<MovieSummaryDto>(movie);
-                    var ratings = await _context.Ratings.Where(r => r.MovieId == movie.Id).ToListAsync();
+                    var ratings = await _context.Ratings
+                        .Where(r => r.MovieId == movie.Id)
+                        .ToListAsync();
+                    
                     dto.AverageRating = ratings.Any() ? ratings.Average(r => r.Score) : 0;
                     dto.TotalRatings = ratings.Count;
+                    
+                    if (userId.HasValue)
+                    {
+                        dto.IsInWatchlist = await _context.WatchlistItems
+                            .AnyAsync(w => w.UserId == userId.Value && w.MovieId == movie.Id);
+                        
+                        var userRating = await _context.Ratings
+                            .FirstOrDefaultAsync(r => r.UserId == userId.Value && r.MovieId == movie.Id);
+                        dto.UserRating = userRating?.Score;
+                    }
+                    
                     result.Movies.Add(dto);
                 }
             }
 
-            if (searchType == null || searchType == "actor")
+            if (searchActors)
             {
-                result.Actors = await _context.Actors
-                    .Where(a => a.FirstName.Contains(query) || a.LastName.Contains(query))
+                var actors = await _context.Actors
+                    .Where(a => 
+                        EF.Functions.Like(a.FirstName.ToLower(), $"%{query}%") || 
+                        EF.Functions.Like(a.LastName.ToLower(), $"%{query}%"))
                     .Take(limit)
-                    .Select(a => _mapper.Map<ActorDto>(a))
                     .ToListAsync();
+
+                foreach (var actor in actors)
+                {
+                    var actorDto = _mapper.Map<ActorDto>(actor);
+                    result.Actors.Add(actorDto);
+                }
             }
 
             return result;
         }
 
-        public async Task<List<MovieSummaryDto>> GetQuickSearchAsync(string query, int limit = 3)
+        public async Task<List<MovieSummaryDto>> GetQuickSearchAsync(string query, int limit = 3, int? userId = null)
         {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return new List<MovieSummaryDto>();
+            }
+
+            query = query.ToLower().Trim();
+            
             var movies = await _context.Movies
-                .Where(m => m.Title.Contains(query) || 
-                           (m.TitleTurkish != null && m.TitleTurkish.Contains(query)))
-                .OrderByDescending(m => m.PopularityScore)
+                .Where(m => 
+                    EF.Functions.Like(m.Title.ToLower(), $"%{query}%") || 
+                    (m.TitleTurkish != null && EF.Functions.Like(m.TitleTurkish.ToLower(), $"%{query}%")))
+                .OrderByDescending(m => m.IMDBScore)
                 .Take(limit)
                 .ToListAsync();
 
@@ -148,9 +205,23 @@ namespace IMDB.Services
             foreach (var movie in movies)
             {
                 var dto = _mapper.Map<MovieSummaryDto>(movie);
-                var ratings = await _context.Ratings.Where(r => r.MovieId == movie.Id).ToListAsync();
+                var ratings = await _context.Ratings
+                    .Where(r => r.MovieId == movie.Id)
+                    .ToListAsync();
+                
                 dto.AverageRating = ratings.Any() ? ratings.Average(r => r.Score) : 0;
                 dto.TotalRatings = ratings.Count;
+                
+                if (userId.HasValue)
+                {
+                    dto.IsInWatchlist = await _context.WatchlistItems
+                        .AnyAsync(w => w.UserId == userId.Value && w.MovieId == movie.Id);
+                    
+                    var userRating = await _context.Ratings
+                        .FirstOrDefaultAsync(r => r.UserId == userId.Value && r.MovieId == movie.Id);
+                    dto.UserRating = userRating?.Score;
+                }
+                
                 movieDtos.Add(dto);
             }
 
@@ -161,39 +232,31 @@ namespace IMDB.Services
         {
             var movie = await _context.Movies
                 .Include(m => m.Ratings)
-                .Include(m => m.Comments)
                 .FirstOrDefaultAsync(m => m.Id == movieId);
 
             if (movie == null) return;
 
-            // Calculate popularity score based on multiple factors  
-            var avgRating = movie.Ratings.Any() ? movie.Ratings.Average(r => r.Score) : 0;
             var ratingCount = movie.Ratings.Count;
-            var commentCount = movie.Comments.Count;
-            var viewCount = movie.ViewCount;
-
-            // Convert avgRating to decimal to match the type of other operands  
-            var popularityScore =
-                ((decimal)avgRating * 0.3m) +                           // 30% rating quality  
-                (Math.Min(ratingCount / 10.0m, 10) * 0.25m) +          // 25% rating quantity (capped)  
-                (Math.Min(commentCount / 5.0m, 10) * 0.15m) +          // 15% comments (capped)  
-                (Math.Min(viewCount / 100.0m, 20) * 0.3m);             // 30% views (capped)  
+            // PopularityScore = ViewCount + (IMDBScore * RatingCount * 100)
+            var popularityScore = movie.ViewCount + (movie.IMDBScore * ratingCount * 100);
 
             movie.PopularityScore = popularityScore;
             await _context.SaveChangesAsync();
-
-            // Update popularity rankings  
-            await UpdatePopularityRankingsAsync();
         }
 
         public async Task UpdateAllMoviePopularityAsync()
         {
-            var movies = await _context.Movies.ToListAsync();
-            
+            var movies = await _context.Movies.Include(m => m.Ratings).ToListAsync();
+
             foreach (var movie in movies)
             {
-                await UpdateMoviePopularityAsync(movie.Id);
+                var ratingCount = movie.Ratings.Count;
+                movie.PopularityScore = movie.ViewCount + (movie.IMDBScore * ratingCount * 100);
             }
+
+            await _context.SaveChangesAsync();
+
+            await UpdatePopularityRankingsAsync();
         }
 
         private async Task UpdatePopularityRankingsAsync()

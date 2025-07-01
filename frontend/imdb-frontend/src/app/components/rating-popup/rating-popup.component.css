@@ -1,0 +1,260 @@
+.rating-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.rating-popup {
+  background: #1a1a1a;
+  border: 1px solid #333333;
+  border-radius: 12px;
+  padding: 24px;
+  width: 90%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideIn 0.3s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.9);
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #333333;
+  padding-bottom: 16px;
+}
+
+.popup-header h3 {
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  flex: 1;
+  margin-right: 16px;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.movie-info {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.movie-poster {
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #333333;
+}
+
+.movie-details {
+  flex: 1;
+}
+
+.movie-details h4 {
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+}
+
+.movie-year {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  margin: 0 0 8px 0;
+}
+
+.current-rating {
+  color: #f5c518;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.average-rating {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  font-weight: 400;
+  margin: 4px 0 0 0;
+}
+
+.rating-section {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.rating-label {
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 16px 0;
+}
+
+.stars-container {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.star-btn {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  opacity: 0.3;
+}
+
+.star-btn:hover {
+  transform: scale(1.1);
+}
+
+.star-btn.filled {
+  opacity: 1;
+  filter: drop-shadow(0 0 4px rgba(245, 197, 24, 0.5));
+}
+
+.rating-display {
+  color: #f5c518;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.popup-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.cancel-btn,
+.submit-btn {
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.cancel-btn {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.submit-btn {
+  background: #f5c518;
+  color: #0f1419;
+  border: 1px solid #f5c518;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: #e6b800;
+  border-color: #e6b800;
+}
+
+.submit-btn:disabled {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.2);
+  cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 520px) {
+  .rating-popup {
+    padding: 20px;
+    margin: 16px;
+  }
+  
+  .popup-header h3 {
+    font-size: 18px;
+  }
+  
+  .movie-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .movie-poster {
+    width: 100px;
+    height: 150px;
+  }
+  
+  .stars-container {
+    gap: 2px;
+  }
+  
+  .star-btn {
+    font-size: 20px;
+    padding: 2px;
+  }
+  
+  .popup-actions {
+    flex-direction: column;
+  }
+  
+  .cancel-btn,
+  .submit-btn {
+    width: 100%;
+  }
+} 

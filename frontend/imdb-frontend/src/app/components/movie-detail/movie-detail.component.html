@@ -1,0 +1,206 @@
+<div class="movie-detail-page">
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+    <p>{{ translations.loading }}</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-state" *ngIf="error && !isLoading">
+    <div class="error-message">
+      <h3>{{ translations.error }}</h3>
+      <p>{{ error }}</p>
+      <button class="retry-button" (click)="goBack()">
+        {{ translations.goBack }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Movie Content -->
+  <div class="movie-content" *ngIf="movie && !isLoading && !error">
+    <!-- Hero Section -->
+    <div class="movie-hero">
+      <div class="hero-background">
+        <img 
+          [src]="movie.imageUrl || 'assets/movie-placeholder.jpg'" 
+          [alt]="getMovieTitle()"
+          class="hero-image">
+        <div class="hero-overlay"></div>
+      </div>
+      
+      <div class="hero-content">
+        <button class="back-button" (click)="goBack()">
+          ← {{ translations.goBack }}
+        </button>
+        
+        <div class="movie-header">
+          <!-- Movie Info Section -->
+          <div class="movie-info-section">
+            <h1 class="movie-title">{{ getMovieTitle() }}</h1>
+            <div class="movie-meta">
+              <span class="year">{{ movie.releaseYear }}</span>
+              <span class="separator">•</span>
+              <span class="genre">{{ movie.genre }}</span>
+              <span class="separator">•</span>
+              <span class="duration">{{ movie.durationMinutes }} {{ translations.minutes }}</span>
+            </div>
+            
+            <!-- Ratings -->
+            <div class="ratings-section">
+              <div class="rating-item imdb-rating clickable" (click)="goToRatingDetail()">
+                <span class="rating-label">{{ translations.imdbScore }}</span>
+                <div class="rating-value">
+                  <span class="score">{{ movie.imdbScore }}</span>
+                  <span class="max">/10</span>
+                  <span class="votes" *ngIf="movie.totalRatings">
+                    ({{ movie.totalRatings }} {{ translations.ratings }})
+                  </span>
+                </div>
+              </div>
+              
+              <div class="rating-item user-rating" *ngIf="movie.userRating">
+                <span class="rating-label">{{ translations.yourRating }}</span>
+                <div class="rating-value">
+                  <span class="score">{{ movie.userRating }}</span>
+                  <span class="max">/10</span>
+                </div>
+              </div>
+
+              <!-- Popularity Rank -->
+              <div class="rating-item popularity-rank" *ngIf="movie.popularityRank">
+                <span class="rating-label">{{ translations.ranking }}</span>
+                <div class="rating-value">
+                  <span class="score">#{{ movie.popularityRank }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+              <button 
+                class="action-btn rate-btn"
+                (click)="onRateClick()"
+                [class.user-rated]="movie.userRating">
+                <span class="btn-icon">⭐</span>
+                <span class="btn-text">
+                  {{ movie.userRating ? translations.rated + ' ' + movie.userRating : translations.rate }}
+                </span>
+              </button>
+              
+              <button 
+                class="action-btn watchlist-btn"
+                [class.in-watchlist]="movie.isInWatchlist"
+                (click)="onWatchlistToggle()">
+                <span class="btn-icon">{{ movie.isInWatchlist ? '❤️' : '🤍' }}</span>
+                <span class="btn-text">
+                  {{ movie.isInWatchlist ? translations.removeFromWatchlist : translations.addToWatchlist }}
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Media Section -->
+        <div class="media-section">
+          <div class="movie-poster">
+            <img 
+              [src]="movie.imageUrl || 'assets/movie-placeholder.jpg'" 
+              [alt]="getMovieTitle()"
+              class="poster-image">
+          </div>
+          
+          <!-- Movie Trailer -->
+          <div class="movie-trailer" *ngIf="movie.trailerUrl">
+            <div class="trailer-container">
+              <iframe 
+                [src]="getYouTubeEmbedUrl()"
+                frameborder="0"
+                allowfullscreen
+                class="trailer-iframe"
+                [title]="translations.watchTrailer">
+              </iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="content-container">
+        <!-- Movie Summary -->
+        <section class="summary-section">
+          <h2>{{ translations.summary }}</h2>
+          <p class="movie-summary">{{ getMovieSummary() }}</p>
+          
+          <div class="movie-details">
+            <div class="detail-item">
+              <span class="label">{{ translations.director }}:</span>
+              <span class="value">{{ movie.director }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">{{ translations.genre }}:</span>
+              <span class="value">{{ movie.genre }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">{{ translations.year }}:</span>
+              <span class="value">{{ movie.releaseYear }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">{{ translations.duration }}:</span>
+              <span class="value">{{ movie.durationMinutes }} {{ translations.minutes }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">{{ translations.views }}:</span>
+              <span class="value">{{ movie.viewCount | number }}</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Cast Section -->
+        <section class="cast-section" *ngIf="movie.actors && movie.actors.length > 0">
+          <h2>{{ translations.cast }}</h2>
+          <div class="actors-grid">
+            <div class="actor-card" *ngFor="let actor of movie.actors">
+              <div class="actor-info">
+                <h4 class="actor-name">{{ actor.firstName }} {{ actor.lastName }}</h4>
+                <p class="character-name" *ngIf="actor.characterName">{{ actor.characterName }}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+          <h2>{{ translations.statistics }}</h2>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-number">{{ movie.imdbScore }}</span>
+              <span class="stat-label">{{ translations.imdbScore }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">{{ movie.totalRatings | number }}</span>
+              <span class="stat-label">{{ translations.ratings }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">{{ movie.viewCount | number }}</span>
+              <span class="stat-label">{{ translations.views }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">#{{ movie.popularityRank }}</span>
+              <span class="stat-label">{{ translations.ranking }}</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rating Popup -->
+  <app-rating-popup
+    [movie]="movie"
+    [isVisible]="showRatingPopup"
+    (rateMovie)="onRatingSubmit($event)"
+    (close)="closeRatingPopup()">
+  </app-rating-popup>
+</div> 

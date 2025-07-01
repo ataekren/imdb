@@ -35,6 +35,7 @@ export interface MovieSummary {
   averageRating: number;
   totalRatings: number;
   isInWatchlist?: boolean;
+  userRating?: number;
 }
 
 export interface Actor {
@@ -58,4 +59,11 @@ export interface Comment {
   content: string;
   userName: string;
   createdAt: string;
+}
+
+export interface RatingDistribution {
+  country: string;
+  averageRating: number;
+  totalRatings: number;
+  ratingCounts: { [score: number]: number };
 } 

@@ -62,6 +62,22 @@ export class AuthService {
     );
   }
 
+  uploadProfilePicture(file: File): Observable<{message: string, user: any}> {
+    return this.apiService.uploadProfilePicture(file).pipe(
+      tap(response => {
+        // Update the current user with the new profile picture
+        const currentUser = this.getCurrentUser();
+        if (currentUser && response.user) {
+          const updatedUser = { ...currentUser, profilePicture: response.user.profilePicture };
+          this.currentUserSubject.next(updatedUser);
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+          }
+        }
+      })
+    );
+  }
+
   logout(): void {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('token');

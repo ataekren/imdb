@@ -35,6 +35,9 @@ namespace IMDB.Models
         [MaxLength(255)]
         public string? GoogleId { get; set; }
 
+        [MaxLength(500)]
+        public string? ProfilePicture { get; set; }
+
         public bool IsGoogleAuth { get; set; } = false;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

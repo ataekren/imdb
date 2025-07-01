@@ -1,0 +1,55 @@
+<div class="rating-overlay" *ngIf="isVisible" (click)="onOverlayClick($event)">
+  <div class="rating-popup">
+    <div class="popup-header">
+      <h3>{{ translations.rate }} "{{ getMovieTitle() }}"</h3>
+      <button class="close-btn" (click)="closePopup()">✕</button>
+    </div>
+    
+    <div class="movie-info" *ngIf="movie">
+      <img 
+        [src]="movie.imageUrl || 'assets/movie-placeholder.jpg'" 
+        [alt]="getMovieTitle()"
+        class="movie-poster">
+      <div class="movie-details">
+        <h4>{{ getMovieTitle() }}</h4>
+        <p class="movie-year">{{ movie.releaseYear }} • {{ movie.genre }}</p>
+        <p class="current-rating">
+          IMDb: {{ movie.imdbScore }}/10 
+          <span *ngIf="movie.totalRatings">({{ movie.totalRatings }} {{ translations.ratings }})</span>
+        </p>
+        <p class="average-rating" *ngIf="movie.averageRating && movie.averageRating !== movie.imdbScore">
+          User Avg: {{ movie.averageRating.toFixed(1) }}/10
+        </p>
+      </div>
+    </div>
+    
+    <div class="rating-section">
+      <p class="rating-label">{{ translations.rate }}:</p>
+      <div class="stars-container" (mouseleave)="onStarLeave()">
+        <button 
+          *ngFor="let star of [1,2,3,4,5,6,7,8,9,10]; let i = index"
+          class="star-btn"
+          [class]="getStarClass(i + 1)"
+          (mouseenter)="onStarHover(i + 1)"
+          (click)="onStarClick(i + 1)">
+          ⭐
+        </button>
+      </div>
+      <div class="rating-display" *ngIf="selectedRating > 0">
+        {{ selectedRating }}/10
+      </div>
+    </div>
+    
+    <div class="popup-actions">
+      <button class="cancel-btn" (click)="closePopup()">
+        Cancel
+      </button>
+      <button 
+        class="submit-btn" 
+        [disabled]="selectedRating === 0"
+        (click)="onSubmitRating()">
+        Submit Rating
+      </button>
+    </div>
+  </div>
+</div> 

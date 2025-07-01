@@ -28,7 +28,8 @@ namespace IMDB.Controllers
         [HttpGet("popular")]
         public async Task<IActionResult> GetPopularMovies([FromQuery] int count = 10)
         {
-            var movies = await _movieService.GetPopularMoviesAsync(count);
+            var userId = GetUserId();
+            var movies = await _movieService.GetPopularMoviesAsync(count, userId);
             return Ok(movies);
         }
 
@@ -54,7 +55,8 @@ namespace IMDB.Controllers
                 return BadRequest(new { message = "Query is required" });
             }
 
-            var results = await _movieService.SearchAsync(query, type, limit);
+            var userId = GetUserId();
+            var results = await _movieService.SearchAsync(query, type, limit, userId);
             return Ok(results);
         }
 
@@ -66,7 +68,8 @@ namespace IMDB.Controllers
                 return BadRequest(new { message = "Query must be at least 3 characters long" });
             }
 
-            var movies = await _movieService.GetQuickSearchAsync(query, limit);
+            var userId = GetUserId();
+            var movies = await _movieService.GetQuickSearchAsync(query, limit, userId);
             return Ok(movies);
         }
 
@@ -138,10 +141,25 @@ namespace IMDB.Controllers
 
                 await _context.SaveChangesAsync();
 
-                // Update movie popularity
-                _ = Task.Run(() => _movieService.UpdateMoviePopularityAsync(id));
+                // Update movie's IMDb score with recalculated average
+                await UpdateMovieIMDbScoreAsync(id);
 
-                return Ok(new { message = "Rating saved successfully" });
+                // Recalculate popularity for all movies synchronously to avoid DbContext concurrency issues
+                await _movieService.UpdateAllMoviePopularityAsync();
+
+                // Get updated movie data to return
+                var updatedMovie = await _context.Movies.FindAsync(id);
+                var allRatings = await _context.Ratings.Where(r => r.MovieId == id).ToListAsync();
+                
+                return Ok(new { 
+                    message = "Rating saved successfully",
+                    updatedMovieData = new {
+                        id = updatedMovie.Id,
+                        imdbScore = updatedMovie.IMDBScore,
+                        averageRating = allRatings.Any() ? allRatings.Average(r => r.Score) : 0,
+                        totalRatings = allRatings.Count
+                    }
+                });
             }
             catch (Exception ex)
             {
@@ -306,6 +324,22 @@ namespace IMDB.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, new { message = "Failed to update popularity", error = ex.Message });
+            }
+        }
+
+        private async Task UpdateMovieIMDbScoreAsync(int movieId)
+        {
+            var movie = await _context.Movies.FindAsync(movieId);
+            if (movie == null) return;
+
+            var ratings = await _context.Ratings.Where(r => r.MovieId == movieId).ToListAsync();
+            
+            if (ratings.Any())
+            {
+                var averageRating = ratings.Average(r => r.Score);
+                movie.IMDBScore = (decimal)averageRating;
+                movie.UpdatedAt = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
             }
         }
 

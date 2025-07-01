@@ -25,7 +25,7 @@
     <div class="slider-track" [style.transform]="getSliderTransform()">
       <div 
         class="movie-card" 
-        *ngFor="let movie of movies"
+        *ngFor="let movie of movies | slice:0:10; let i = index"
         (click)="onMovieClick(movie)">
         
         <!-- Movie Poster -->
@@ -54,28 +54,31 @@
                 ▶️
               </button>
             </div>
-            
-            <!-- Quick Info -->
-            <div class="quick-info">
-              <div class="rating-badge">
-                ⭐ {{ movie.imdbScore }}/10
-              </div>
-              <div class="ranking-badge" *ngIf="movie.popularityRank">
-                #{{ movie.popularityRank }}
-              </div>
-            </div>
           </div>
         </div>
 
         <!-- Movie Info -->
         <div class="movie-info">
-          <h3 class="movie-title">{{ getMovieTitle(movie) }}</h3>
+          <h3 class="movie-title">{{ i + 1 }}. {{ getMovieTitle(movie) }}</h3>
           <div class="movie-meta">
             <span class="year">{{ movie.releaseYear }}</span>
             <span class="genre">{{ movie.genre }}</span>
           </div>
+          
+          <!-- Rate Button -->
+          <div class="rate-section">
+            <button 
+              class="rate-btn"
+              (click)="onRateClick($event, movie)"
+              [class.user-rated]="movie.userRating">
+              <span class="rate-icon">⭐</span>
+              <span class="rate-text">
+                {{ movie.userRating ? 'Rated ' + movie.userRating : translations.rate }}
+              </span>
+            </button>
+          </div>
           <div class="movie-stats">
-            <span class="rating">
+            <span class="rating clickable" (click)="onRatingDetail($event, movie)">
               ⭐ {{ movie.averageRating ? movie.averageRating.toFixed(1) : movie.imdbScore }}/10
             </span>
             <span class="votes" *ngIf="movie.totalRatings">
@@ -99,6 +102,7 @@
               🎬 Watch Trailer
             </button>
           </div>
+          
         </div>
       </div>
     </div>
@@ -121,4 +125,12 @@
     <h3>{{ translations.noResults }}</h3>
     <p>{{ translations.loading }}</p>
   </div>
-</div> 
+</div>
+
+<!-- Rating Popup -->
+<app-rating-popup
+  [movie]="movieToRate"
+  [isVisible]="showRatingPopup"
+  (rateMovie)="onRatingSubmit($event)"
+  (close)="closeRatingPopup()">
+</app-rating-popup> 

@@ -1,0 +1,39 @@
+<div class="search-result-page">
+  <h2 class="search-title">
+    "{{ translations.searchPlaceholder }}" – "{{ query }}"
+  </h2>
+
+  <div *ngIf="isLoading" class="loading">{{ translations.loading }}</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <!-- Movies Section -->
+  <section *ngIf="!isLoading && results.movies.length > 0" class="movies-section">
+    <h3 class="section-title">{{ translations.searchMovies }} ({{ results.movies.length }})</h3>
+    <div class="movies-grid">
+      <div class="movie-card" *ngFor="let movie of results.movies" (click)="onMovieSelect(movie)">
+        <img [src]="movie.imageUrl || 'assets/movie-placeholder.jpg'" [alt]="getMovieTitle(movie)" />
+        <div class="info">
+          <h4 class="movie-title">{{ getMovieTitle(movie) }}</h4>
+          <p class="meta">{{ movie.releaseYear }} • ⭐ {{ movie.imdbScore }}/10</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Actors Section -->
+  <section *ngIf="!isLoading && results.actors.length > 0" class="actors-section">
+    <h3 class="section-title">{{ translations.searchActors }} ({{ results.actors.length }})</h3>
+    <div class="actors-grid">
+      <div class="actor-card" *ngFor="let actor of results.actors" (click)="onActorSelect(actor)">
+        <div class="info">
+          <h4 class="actor-name">{{ actor.firstName }} {{ actor.lastName }}</h4>
+          <p class="meta" *ngIf="actor.nationality">{{ actor.nationality }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div *ngIf="!isLoading && results.movies.length === 0 && results.actors.length === 0" class="no-results">
+    {{ translations.noResults }}
+  </div>
+</div> 
