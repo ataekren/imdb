@@ -542,4 +542,9 @@ section h2 {
   .character-name {
     font-size: 12px;
   }
+}
+
+/* Clickable helper */
+.clickable {
+  cursor: pointer;
 } 

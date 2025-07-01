@@ -21,7 +21,8 @@ import {
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = 'https://localhost:7053/api';
+  //private baseUrl = 'https://localhost:7053/api';
+  private baseUrl = 'https://imdb-web.azurewebsites.net/api';
 
   constructor(private http: HttpClient) {}
 

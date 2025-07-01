@@ -9,17 +9,6 @@
         <p>{{ translations.loading }}</p>
       </div>
 
-      <!-- Error State -->
-      <div class="error-state" *ngIf="error && !isLoading">
-        <div class="error-message">
-          <h3>{{ translations.error }}</h3>
-          <p>{{ error }}</p>
-          <button class="retry-button" (click)="loadPopularMovies()">
-            Try Again
-          </button>
-        </div>
-      </div>
-
       <!-- Movies Slider -->
       <app-movie-slider
         *ngIf="!isLoading && !error && popularMovies.length > 0"

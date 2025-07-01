@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, OnChanges, SimpleChanges, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
+import { isPlatformBrowser } from '@angular/common';
 
 import { MovieSummary } from '../../models/movie.model';
 import { LanguageService } from '../../services/language.service';
@@ -33,12 +34,17 @@ export class MovieSliderComponent implements OnInit, OnDestroy, OnChanges {
   showRatingPopup = false;
   movieToRate: MovieSummary | null = null;
 
+  isBrowser = false;
+
   constructor(
     private router: Router,
     private languageService: LanguageService,
     private authService: AuthService,
-    private apiService: ApiService
-  ) {}
+    private apiService: ApiService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
 
   ngOnInit(): void {
     this.authService.isLoggedIn$
@@ -59,13 +65,17 @@ export class MovieSliderComponent implements OnInit, OnDestroy, OnChanges {
         this.updateSlidesToShow();
       });
 
-    window.addEventListener('resize', this.onResize.bind(this));
+    if (this.isBrowser) {
+      window.addEventListener('resize', this.onResize.bind(this));
+    }
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    window.removeEventListener('resize', this.onResize.bind(this));
+    if (this.isBrowser) {
+      window.removeEventListener('resize', this.onResize.bind(this));
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -82,7 +92,7 @@ export class MovieSliderComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private updateSlidesToShow(): void {
-    const width = window.innerWidth;
+    const width = this.isBrowser ? window.innerWidth : 1200;
     if (width < 480) {
       this.slidesToShow = 2;
     } else if (width < 768) {

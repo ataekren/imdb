@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:7297/api',
+  apiUrl: 'https://imdb-web.azurewebsites.net/api',
   firebase: {
     apiKey: "AIzaSyB1keTxZhgEcACMV9ri-9jpKND7qt4Gu8w",
     authDomain: "imdb-fb.firebaseapp.com",
