@@ -92,7 +92,7 @@
               class="action-btn watchlist-btn"
               [class.in-watchlist]="movie.isInWatchlist"
               (click)="onWatchlistToggle($event, movie)">
-              {{ movie.isInWatchlist ? translations.removeFromWatchlist : translations.addToWatchlist }}
+              {{ movie.isInWatchlist ? '✓ ' + translations.removeFromWatchlist : '+ ' + translations.addToWatchlist }}
             </button>
             
             <button 
