@@ -158,7 +158,7 @@ export class LanguageService {
       searchAll: 'Tümü',
       
       // Movies
-      popularMovies: 'Popüler Filmler',
+      popularMovies: 'Bu Haftanın En İyi 10 Filmi',
       popularMoviesDescription: 'En popüler filmleri puanları, fragmanları ve yorumlarıyla keşfedin',
       imdbScore: 'IMDB Puanı',
       year: 'Yıl',
