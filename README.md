@@ -1,6 +1,6 @@
 # 🎬 IMDB Web Project
 
-A modern, full-stack movie database application built with Angular and .NET Core, featuring a responsive design, multilingual support, and rich user interactions.
+A modern, full-stack movie database application built with Angular and .NET Core.
 
 ## 🔗 Links  
 - [Demo Video Link](https://www.youtube.com/watch?v=Ski6BP0eWi8)
