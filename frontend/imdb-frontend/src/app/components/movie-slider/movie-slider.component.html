@@ -92,14 +92,14 @@
               class="action-btn watchlist-btn"
               [class.in-watchlist]="movie.isInWatchlist"
               (click)="onWatchlistToggle($event, movie)">
-              {{ movie.isInWatchlist ? '✓ In Watchlist' : '+ Add to Watchlist' }}
+              {{ movie.isInWatchlist ? translations.removeFromWatchlist : translations.addToWatchlist }}
             </button>
             
             <button 
               class="action-btn trailer-btn"
               [disabled]="!movie.trailerUrl"
               (click)="onTrailerClick($event, movie)">
-              🎬 Watch Trailer
+              🎬 {{ translations.watchTrailer }}
             </button>
           </div>
           
