@@ -3,7 +3,6 @@
 A modern, full-stack movie database application built with Angular and .NET Core.
 
 ## 🔗 Links  
-- [Demo Video Link](https://www.youtube.com/watch?v=Ski6BP0eWi8)
 - [Frontend Deployment](https://imdb-ata.vercel.app)
 - [GitHub Repository Link](https://github.com/ataekren/imdb)
 
